@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <msgtest/msgtest.h>
-#include "common/Messaging.h"
+#include "app.h"
 
 USING_MSGTEST_NS
 

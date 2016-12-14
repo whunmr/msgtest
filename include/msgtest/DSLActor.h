@@ -8,21 +8,17 @@ MSGTEST_NS_START
 
 template<typename T>
 struct DSLActor {
-    T& operator--(int) {
-        return static_cast<T&>(*this);
-    }
+    T& operator--(int) { return static_cast<T&>(*this); }
+    T& operator--()    { return static_cast<T&>(*this); }
 
-    T& operator--() {
-        return static_cast<T&>(*this);
-    }
-
+    ////////////////////////////////////////////////////////////////////////////
     template<typename PAYLOAD>
     T& operator()(MsgId msgid, PAYLOAD* payload) {
         return operator()(msgid, payload, sizeof(PAYLOAD));
     }
 
     T& operator()(MsgId msgid, void* payload, size_t len) {
-        as<MsgTempHolder&>().save(msgid, payload, len);
+        as<MsgTempHolder &>().holdTempMsg(msgid, payload, len);
         return asActor();
     }
 
@@ -33,6 +29,21 @@ struct DSLActor {
     void operator<(MsgTempHolder& msgTempHolder) {
         as<MsgSender&>().receiveMsg(msgTempHolder);
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    T& operator()(MsgId expectedMsgId) {
+        as<ExpectedMsgSpecHolder&>().holdMsgSpec(expectedMsgId);
+        return asActor();
+    }
+
+    void operator<<(ExpectedMsgSpecHolder& h) {
+        as<ExpectedMsgSpecActivator&>().setupExpectedFromMsgSpec(h);
+    }
+
+    void operator>>(ExpectedMsgSpecHolder& h) {
+        as<ExpectedMsgSpecActivator&>().setupExpectedToMsgSpec(h);
+    }
+
 
 private:
     T& asActor() {
