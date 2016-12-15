@@ -8,7 +8,8 @@
 #include <msgtest/msgtest_ns.h>
 #include <msgtest/MsgScheduler.h>
 #include <msgtest/MsgMocker.h>
-
+#include <mockcpp/Constraint.h>
+USING_MOCKCPP_NS
 MSGTEST_NS_START
 
 struct ActorMixinRole {
@@ -17,20 +18,32 @@ struct ActorMixinRole {
 
 ////////////////////////////////////////////////////////////////////////////////
 struct ExpectedMsgSpecHolder : ActorMixinRole {
-    void holdMsgSpec(MsgId expectedMsgId) {
+    void holdMsgSpec(MsgId expectedMsgId, Constraint* payloadConstraint, Constraint* lenConstraint) {
         expectedMsgId_ = expectedMsgId;
+        payloadConstraint_ = payloadConstraint;
+        lenConstraint_ = lenConstraint;
     }
 
     MsgId expectedMsgId_;
+    Constraint* payloadConstraint_;
+    Constraint* lenConstraint_;
 };
 
 struct ExpectedMsgSpecActivator : ActorMixinRole {
     void setupExpectedFromMsgSpec(ExpectedMsgSpecHolder &from) {
-        MsgMocker::setupMsgMockSpec(from.id(), id(), from.expectedMsgId_);
+        MsgMocker::setupMsgMockSpec(from.id()
+                                    , id()
+                                    , from.expectedMsgId_
+                                    , from.payloadConstraint_
+                                    , from.lenConstraint_);
     }
 
     void setupExpectedToMsgSpec(ExpectedMsgSpecHolder &to) {
-        MsgMocker::setupMsgMockSpec(id(), to.id(), to.expectedMsgId_);
+        MsgMocker::setupMsgMockSpec(id()
+                                    , to.id()
+                                    , to.expectedMsgId_
+                                    , to.payloadConstraint_
+                                    , to.lenConstraint_);
     }
 };
 

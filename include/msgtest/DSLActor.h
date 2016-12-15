@@ -4,6 +4,9 @@
 #include <cstddef>
 #include <msgtest/Typedefs.h>
 #include <msgtest/BaseActor.h>
+#include <mockcpp/mockcpp.hpp>
+USING_MOCKCPP_NS
+
 MSGTEST_NS_START
 
 struct TestPhase {
@@ -45,22 +48,26 @@ struct DSLActor {
 
     ////////////////////////////////////////////////////////////////////////////
     T& operator()(MsgId expectedMsgId) {
+        return operator()(expectedMsgId, any(), any());
+    }
+
+    T& operator()(MsgId expectedMsgId, Constraint* c1, Constraint* c2) {
         if (TestPhase::phase_ == TestPhase::SetupMockPhase)
-            as<ExpectedMsgSpecHolder&>().holdMsgSpec(expectedMsgId);
+            as<ExpectedMsgSpecHolder&>().holdMsgSpec(expectedMsgId, c1, c2);
 
         return asActor();
     }
 
+
     void operator<<(ExpectedMsgSpecHolder& h) {
         if (TestPhase::phase_ == TestPhase::SetupMockPhase)
-            as<ExpectedMsgSpecActivator&>().setupExpectedFromMsgSpec(h);
+            as<ExpectedMsgSpecActivator &>().setupExpectedFromMsgSpec(h);
     }
 
     void operator>>(ExpectedMsgSpecHolder& h) {
         if (TestPhase::phase_ == TestPhase::SetupMockPhase)
-            as<ExpectedMsgSpecActivator&>().setupExpectedToMsgSpec(h);
+            as<ExpectedMsgSpecActivator &>().setupExpectedToMsgSpec(h);
     }
-
 
 private:
     T& asActor() {

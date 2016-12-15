@@ -58,3 +58,19 @@ TEST(msgtest, should_able_to__suuport__multiple__msg_interaction) {
     } ___end;
 }
 
+
+TEST(msgtest, should_able_to___save_msg_payload___for_further_check_and_inspection) {
+    static MsgSaver<MsgPayload> rspMsg; //TOOD: release memory
+
+    static MsgPayload payload;
+
+    msg_interaction {
+            alice ---->bob(EV_ALICE_REQ, &payload);
+            alice<<----bob(EV_BOB_RSP, ___save_to(rspMsg));
+    } ___end;
+
+    EXPECT_EQ(kfieldA_value_in_bob_to_alice_rsp, rspMsg->fieldA);
+    EXPECT_EQ(kfieldB_value_in_bob_to_alice_rsp, rspMsg->fieldB);
+    EXPECT_EQ(kfieldC_value_in_bob_to_alice_rsp, rspMsg->fieldC);
+}
+

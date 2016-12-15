@@ -18,6 +18,10 @@ void log_msg(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t 
 ////////////////////////////////////////////////////////////////////////////////
 void send_rsp_msg_to_alice() {
     MsgPayload payload;
+    payload.fieldA = kfieldA_value_in_bob_to_alice_rsp;
+    payload.fieldB = kfieldB_value_in_bob_to_alice_rsp;
+    payload.fieldC = kfieldC_value_in_bob_to_alice_rsp;
+
     g_app_msg_loop(id_of_bob, id_of_alice, EV_BOB_RSP, &payload, sizeof(payload));
 }
 
