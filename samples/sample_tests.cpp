@@ -32,3 +32,18 @@ TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob) {
             alice<<----bob(EV_BOB_RSP);
     } ___end;
 }
+
+TEST(msgtest, should_able_to__suuport__multiple__msg_interaction) {
+    static MsgPayload payload;
+
+    msg_interaction {
+            alice ---->bob(EV_ALICE_REQ, &payload);
+            alice<<----bob(EV_BOB_RSP);
+    } ___end;
+
+
+    msg_interaction {
+            alice ---->bob(EV_ALICE_REQ, &payload);
+            alice<<----bob(EV_BOB_RSP);
+    } ___end;
+}
