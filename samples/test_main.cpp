@@ -4,20 +4,10 @@
 
 USING_MSGTEST_NS
 
-class MockMsgSpecVerifier : public ::testing::EmptyTestEventListener {
-    virtual void OnTestEnd(const ::testing::TestInfo& test_info) {
-        MsgMocker::verifyMockSpec();
-        MsgSaverBase::freeMsgSaverMemoryOnTestEnd();
-    }
-};
-
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
-    MsgScheduler::set_app_schedule_msg_func(g_app_msg_loop);
-
-    ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-    listeners.Append(new MockMsgSpecVerifier);
+    INIT_MSGTEST_WITH_SCHEDULE_MSG_FUNC(g_app_msg_loop);
 
     return RUN_ALL_TESTS();
 }
