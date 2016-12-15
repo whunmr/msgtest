@@ -1,23 +1,24 @@
 #include "app.h"
 
 #include <iostream>
+#include <msgtest/MsgMocker.h>
 #include "app_ids.h"
 #include "common/MsgId.h"
 #include "common/MsgPayload.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 void log_msg(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
-    std::__1::cout << "Actor from: " << from;
-    std::__1::cout << " ----> " << to;
-    std::__1::cout << " msgid: " << msgId;
-    std::__1::cout << " payload: " << payload;
-    std::__1::cout << " len: " << len << std::__1::endl;
+    std::cout << "Actor from: " << from;
+    std::cout << " ----> " << to;
+    std::cout << " msgid: " << msgId;
+    std::cout << " payload: " << payload;
+    std::cout << " len: " << len << std::endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void send_rsp_msg_to_alice() {
     MsgPayload payload;
-    g_send_msg_func(id_of_bob, id_of_alice, EV_BOB_RSP, &payload, sizeof(payload));
+    g_app_msg_loop(id_of_bob, id_of_alice, EV_BOB_RSP, &payload, sizeof(payload));
 }
 
 void msg_proc_of_bob(ActorId from, MsgId msgId, void* payload, size_t len) {
@@ -32,11 +33,12 @@ void msg_proc_of_others(ActorId from, ActorId to, MsgId msgId, void* payload, si
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void g_send_msg_func(ActorId from, ActorId to, MsgId msgId, void* payload, size_t len) {
+void g_app_msg_loop(ActorId from, ActorId to, MsgId msgId, void *payload, size_t len) {
+    g_msgtest_trace_msg_probe_func(from, to, msgId, payload, len);
+
     if (to == id_of_bob) {
         msg_proc_of_bob(from, msgId, payload, len);
     } else {
         msg_proc_of_others(from , to, msgId, payload, len);
     }
 }
-

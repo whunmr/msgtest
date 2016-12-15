@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-//#include <mockcpp/mockcpp.hpp>
 #include <msgtest/msgtest.h>
 USING_MSGTEST_NS
 
@@ -24,8 +23,7 @@ TEST(msgtest, should_able_to___auto_detect_payload_len___according_payload_type)
 
 TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob){
     MsgPayload payload;
-    alice---->bob(EV_ALICE_REQ, &payload);
     alice<<----bob(EV_BOB_RSP);
-    alice---->>bob(EV_ALICE_ACK);
+    alice---->bob(EV_ALICE_REQ, &payload);
 }
 

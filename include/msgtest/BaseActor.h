@@ -6,6 +6,8 @@
 #include <functional>
 #include <msgtest/Typedefs.h>
 #include <msgtest/msgtest_ns.h>
+#include <msgtest/MsgScheduler.h>
+#include <msgtest/MsgMocker.h>
 
 MSGTEST_NS_START
 
@@ -27,14 +29,16 @@ struct ExpectedMsgSpecActivator : ActorMixinRole {
         std::cout << "expect msg from: " << m.id();
         std::cout << " to: " << id();
         std::cout << " msgid: " << m.expectedMsgId_ << std::endl;
-        //TODO: setup mock spec by mockcpp
+
+        MsgMocker::setupMsgMockSpec(m.expectedMsgId_);
     }
 
     void setupExpectedToMsgSpec(ExpectedMsgSpecHolder &m) {
         std::cout << "expect msg from: " << id();
         std::cout << " to: " << m.id();
         std::cout << " msgid: " << m.expectedMsgId_ << std::endl;
-        //TODO: setup mock spec by mockcpp
+
+        MsgMocker::setupMsgMockSpec(m.expectedMsgId_);
     }
 };
 
@@ -53,26 +57,14 @@ struct MsgTempHolder : ActorMixinRole {
     size_t len_;
 };
 
-
-typedef std::function<void(ActorId, ActorId, MsgId, void*, size_t)> SendMsgFunc;
-
 struct MsgSender : ActorMixinRole {
     void sendMsg(MsgTempHolder& m) {
-        assert((send_msg_func_ != nullptr) && "Should call init_send_msg_func before run tests.");
-        send_msg_func_(id(), m.id(), m.msgId_, m.payload_, m.len_);
+        MsgScheduler::scheduleMsg(id(), m.id(), m.msgId_, m.payload_, m.len_);
     }
 
     void receiveMsg(MsgTempHolder& m) {
-        assert((send_msg_func_ != nullptr) && "Should call init_send_msg_func before run tests.");
-        send_msg_func_(m.id(), id(), m.msgId_, m.payload_, m.len_);
+        MsgScheduler::scheduleMsg(m.id(), id(), m.msgId_, m.payload_, m.len_);
     }
-
-    static void init_send_msg_func(SendMsgFunc f) {
-        send_msg_func_ = f;
-    }
-
-private:
-    static SendMsgFunc send_msg_func_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
