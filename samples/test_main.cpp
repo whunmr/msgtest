@@ -7,6 +7,7 @@ USING_MSGTEST_NS
 class MockMsgSpecVerifier : public ::testing::EmptyTestEventListener {
     virtual void OnTestEnd(const ::testing::TestInfo& test_info) {
         MsgMocker::verifyMockSpec();
+        MsgSaverBase::freeMsgSaverMemoryOnTestEnd();
     }
 };
 

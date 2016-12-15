@@ -33,7 +33,6 @@ TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob) {
     } ___end;
 }
 
-
 TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob____in_reverse_messaging_direction_of_DSL) {
     static MsgPayload payload;
 
@@ -60,7 +59,7 @@ TEST(msgtest, should_able_to__suuport__multiple__msg_interaction) {
 
 
 TEST(msgtest, should_able_to___save_msg_payload___for_further_check_and_inspection) {
-    static MsgSaver<MsgPayload> rspMsg; //TOOD: release memory
+    static MsgSaver<MsgPayload> rspMsg;
 
     static MsgPayload payload;
 

@@ -17,10 +17,12 @@ MSGTEST_NS_START
 
     struct MsgSaverBase {
         MsgSaverBase();
-        ~MsgSaverBase();
+
+        static void freeMsgSaverMemoryOnTestEnd();
 
         bool operator()(size_t len);
 
+    protected:
         void* payload_;
         size_t len_;
 
