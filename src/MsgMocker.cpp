@@ -8,8 +8,8 @@ MSGTEST_NS_START
         /**/
     }
 
-    void MsgMocker::setupMsgMockSpec(msgtest::MsgId msgId) {
-        MOCKER(g_msgtest_trace_msg_probe_func).expects(once()).with(any(), any(), eq(msgId), any(), any());
+    void MsgMocker::setupMsgMockSpec(ActorId from, ActorId to, MsgId msgId) {
+        MOCKER(g_msgtest_trace_msg_probe_func).expects(once()).with(eq(from), eq(to), eq(msgId), any(), any());
     }
 
     void MsgMocker::verifyMockSpec() {

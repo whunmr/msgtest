@@ -25,20 +25,12 @@ struct ExpectedMsgSpecHolder : ActorMixinRole {
 };
 
 struct ExpectedMsgSpecActivator : ActorMixinRole {
-    void setupExpectedFromMsgSpec(ExpectedMsgSpecHolder &m) {
-        std::cout << "expect msg from: " << m.id();
-        std::cout << " to: " << id();
-        std::cout << " msgid: " << m.expectedMsgId_ << std::endl;
-
-        MsgMocker::setupMsgMockSpec(m.expectedMsgId_);
+    void setupExpectedFromMsgSpec(ExpectedMsgSpecHolder &from) {
+        MsgMocker::setupMsgMockSpec(from.id(), id(), from.expectedMsgId_);
     }
 
-    void setupExpectedToMsgSpec(ExpectedMsgSpecHolder &m) {
-        std::cout << "expect msg from: " << id();
-        std::cout << " to: " << m.id();
-        std::cout << " msgid: " << m.expectedMsgId_ << std::endl;
-
-        MsgMocker::setupMsgMockSpec(m.expectedMsgId_);
+    void setupExpectedToMsgSpec(ExpectedMsgSpecHolder &to) {
+        MsgMocker::setupMsgMockSpec(id(), to.id(), to.expectedMsgId_);
     }
 };
 

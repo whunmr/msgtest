@@ -10,7 +10,7 @@ MSGTEST_NS_START
     void g_msgtest_trace_msg_probe_func(ActorId from, ActorId to, MsgId, void*, size_t);
 
     struct MsgMocker {
-        static void setupMsgMockSpec(MsgId msgId);
+        static void setupMsgMockSpec(ActorId from, ActorId to, MsgId msgId);
 
         static void verifyMockSpec();
     };
