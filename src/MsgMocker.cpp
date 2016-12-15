@@ -10,8 +10,6 @@ MSGTEST_NS_START
 
     void MsgMocker::setupMsgMockSpec(msgtest::MsgId msgId) {
         MOCKER(g_msgtest_trace_msg_probe_func).expects(once()).with(any(), any(), eq(msgId), any(), any());
-
-        MOCKER(g_msgtest_trace_msg_probe_func).stubs().with(any(), any(), any(), any(), any());
     }
 
     void MsgMocker::verifyMockSpec() {

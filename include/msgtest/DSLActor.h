@@ -6,6 +6,15 @@
 #include <msgtest/BaseActor.h>
 MSGTEST_NS_START
 
+struct TestPhase {
+    enum Phase {
+        SetupMockPhase,
+        ExecuteMsgInteractionPhase
+    };
+
+    static Phase phase_;
+};
+
 template<typename T>
 struct DSLActor {
     T& operator--(int) { return static_cast<T&>(*this); }
@@ -18,30 +27,38 @@ struct DSLActor {
     }
 
     T& operator()(MsgId msgid, void* payload, size_t len) {
-        as<MsgTempHolder &>().holdTempMsg(msgid, payload, len);
+        if (TestPhase::phase_ == TestPhase::ExecuteMsgInteractionPhase)
+            as<MsgTempHolder &>().holdTempMsg(msgid, payload, len);
+
         return asActor();
     }
 
     void operator>(MsgTempHolder& msgTempHolder) {
-        as<MsgSender&>().sendMsg(msgTempHolder);
+        if (TestPhase::phase_ == TestPhase::ExecuteMsgInteractionPhase)
+            as<MsgSender&>().sendMsg(msgTempHolder);
     }
 
     void operator<(MsgTempHolder& msgTempHolder) {
-        as<MsgSender&>().receiveMsg(msgTempHolder);
+        if (TestPhase::phase_ == TestPhase::ExecuteMsgInteractionPhase)
+            as<MsgSender&>().receiveMsg(msgTempHolder);
     }
 
     ////////////////////////////////////////////////////////////////////////////
     T& operator()(MsgId expectedMsgId) {
-        as<ExpectedMsgSpecHolder&>().holdMsgSpec(expectedMsgId);
+        if (TestPhase::phase_ == TestPhase::SetupMockPhase)
+            as<ExpectedMsgSpecHolder&>().holdMsgSpec(expectedMsgId);
+
         return asActor();
     }
 
     void operator<<(ExpectedMsgSpecHolder& h) {
-        as<ExpectedMsgSpecActivator&>().setupExpectedFromMsgSpec(h);
+        if (TestPhase::phase_ == TestPhase::SetupMockPhase)
+            as<ExpectedMsgSpecActivator&>().setupExpectedFromMsgSpec(h);
     }
 
     void operator>>(ExpectedMsgSpecHolder& h) {
-        as<ExpectedMsgSpecActivator&>().setupExpectedToMsgSpec(h);
+        if (TestPhase::phase_ == TestPhase::SetupMockPhase)
+            as<ExpectedMsgSpecActivator&>().setupExpectedToMsgSpec(h);
     }
 
 

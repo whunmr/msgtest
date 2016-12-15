@@ -20,7 +20,7 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
 
-set(SOURCE_FILES src/msgtestlibsamplefile.cpp src/StubActor.cpp include/msgtest/StubActor.h src/UnderTestActor.cpp include/msgtest/UnderTestActor.h include/msgtest/msgtest.h include/msgtest/DSLActor.h include/msgtest/Typedefs.h include/msgtest/BaseActor.h include/msgtest/msgtest_ns.h src/MsgScheduler.cpp include/msgtest/MsgScheduler.h src/MsgMocker.cpp include/msgtest/MsgMocker.h)
+set(SOURCE_FILES src/StubActor.cpp include/msgtest/StubActor.h src/UnderTestActor.cpp include/msgtest/UnderTestActor.h include/msgtest/msgtest.h include/msgtest/DSLActor.h include/msgtest/Typedefs.h include/msgtest/BaseActor.h include/msgtest/msgtest_ns.h src/MsgScheduler.cpp include/msgtest/MsgScheduler.h src/MsgMocker.cpp include/msgtest/MsgMocker.h src/DSLActor.cpp)
 add_library(msgtest ${SOURCE_FILES})
 
 
