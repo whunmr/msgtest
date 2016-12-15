@@ -33,6 +33,16 @@ TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob) {
     } ___end;
 }
 
+
+TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob____in_reverse_messaging_direction_of_DSL) {
+    static MsgPayload payload;
+
+    msg_interaction {
+            bob<---- alice(EV_ALICE_REQ, &payload);
+            bob---->>alice(EV_BOB_RSP);
+    } ___end;
+}
+
 TEST(msgtest, should_able_to__suuport__multiple__msg_interaction) {
     static MsgPayload payload;
 
@@ -43,7 +53,8 @@ TEST(msgtest, should_able_to__suuport__multiple__msg_interaction) {
 
 
     msg_interaction {
-            alice ---->bob(EV_ALICE_REQ, &payload);
-            alice<<----bob(EV_BOB_RSP);
+            bob<---- alice(EV_ALICE_REQ, &payload);
+            bob---->>alice(EV_BOB_RSP);
     } ___end;
 }
+
