@@ -14,7 +14,7 @@ MSGTEST_NS_START
         TestPhase::phase_ = TestPhase::ExecuteMsgInteractionPhase;
         exec();
 
-        GlobalMockObject::verify();
+        MsgMocker::verifyMockSpec();
     }
 
 
