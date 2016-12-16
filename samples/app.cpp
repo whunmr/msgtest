@@ -7,14 +7,6 @@
 #include "common/MsgPayload.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-void log_msg(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
-    std::cout << "Actor from: " << from;
-    std::cout << " ----> " << to;
-    std::cout << " msgid: " << msgId;
-    std::cout << " payload: " << payload;
-    std::cout << " len: " << len << std::endl;
-}
-
 void msg_proc_of_bob(ActorId from, MsgId msgId, void* payload, size_t len) {
     if (msgId == EV_ALICE_REQ) {
         MsgPayload payload1;
@@ -48,8 +40,7 @@ void msg_proc_of_others(ActorId from, ActorId to, MsgId msgId, void* payload, si
 
 ////////////////////////////////////////////////////////////////////////////////
 void g_app_msg_loop(ActorId from, ActorId to, MsgId msgId, void *payload, size_t len) {
-    log_msg(from, to, msgId, payload, len);
-    g_msgtest_trace_msg_probe_func(from, to, msgId, payload, len);
+    MSGTEST_PROBE_MSG_SCHEDULE();
 
     if (to == id_of_bob) {
         msg_proc_of_bob(from, msgId, payload, len);

@@ -8,11 +8,13 @@
 
 MSGTEST_NS_START
 
-    void g_msgtest_trace_msg_probe_func(ActorId from, ActorId to, MsgId, void*, size_t);
+    extern void g_msgtest_trace_msg_probe_func(ActorId from, ActorId to, MsgId, void*, size_t);
 
     struct MsgMocker {
         static void setupMsgMockSpec(ActorId from, ActorId to, MsgId msgId, mockcpp::Constraint *pConstraint,
                                             mockcpp::Constraint *pConstraint1);
+
+        static void setupDefaultMock();
 
         static void verifyMockSpec();
     };

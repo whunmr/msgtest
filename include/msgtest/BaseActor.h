@@ -64,12 +64,12 @@ struct MsgTempHolder : ActorMixinRole {
 };
 
 struct MsgSender : ActorMixinRole {
-    void sendMsg(MsgTempHolder& m) {
-        MsgScheduler::scheduleMsg(id(), m.id(), m.msgId_, m.payload_, m.len_);
+    void sendMsg(MsgTempHolder& to) {
+        MsgScheduler::scheduleMsg(id(), to.id(), to.msgId_, to.payload_, to.len_);
     }
 
-    void receiveMsg(MsgTempHolder& m) {
-        MsgScheduler::scheduleMsg(m.id(), id(), m.msgId_, m.payload_, m.len_);
+    void receiveMsg(MsgTempHolder& from) {
+        MsgScheduler::scheduleMsg(from.id(), id(), from.msgId_, from.payload_, from.len_);
     }
 };
 

@@ -30,6 +30,10 @@ MSGTEST_NS_START
         ++mock_spec_index_;
     }
 
+    void MsgMocker::setupDefaultMock() {
+        MOCKER(g_msgtest_trace_msg_probe_func).stubs().with(any(), any(), any(), any(), any());
+    }
+
     void MsgMocker::verifyMockSpec() {
         mock_spec_index_ = 0;
         GlobalMockObject::verify();
