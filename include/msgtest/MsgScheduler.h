@@ -10,8 +10,7 @@ MSGTEST_NS_START
 typedef std::function<void(ActorId, ActorId, MsgId, void*, size_t)> ScheduleMsgFunc;
 
 struct MsgScheduler {
-    static void set_app_schedule_msg_func(ScheduleMsgFunc);
-
+    static void setScheduleMsgFunc(ScheduleMsgFunc);
     static void scheduleMsg(ActorId, ActorId, MsgId, void*, size_t);
 };
 
