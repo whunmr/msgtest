@@ -9,7 +9,6 @@
 #include <msgtest/MsgScheduler.h>
 #include <msgtest/MsgMocker.h>
 #include <mockcpp/Constraint.h>
-USING_MOCKCPP_NS
 MSGTEST_NS_START
 
 struct ActorMixinRole {
@@ -18,6 +17,8 @@ struct ActorMixinRole {
 
 ////////////////////////////////////////////////////////////////////////////////
 struct ExpectedMsgSpecHolder : ActorMixinRole {
+    using Constraint = mockcpp::Constraint;
+
     void holdMsgSpec(MsgId expectedMsgId, Constraint* payloadConstraint, Constraint* lenConstraint) {
         expectedMsgId_ = expectedMsgId;
         payloadConstraint_ = payloadConstraint;
