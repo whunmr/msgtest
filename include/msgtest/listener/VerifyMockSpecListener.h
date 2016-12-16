@@ -6,7 +6,7 @@
 #include <msgtest/MsgSaver.h>
 MSGTEST_NS_START
 
-class MsgTestVerifyMockSpecListener : public ::testing::EmptyTestEventListener {
+class VerifyMockSpecListener : public ::testing::EmptyTestEventListener {
     virtual void OnTestEnd(const ::testing::TestInfo& test_info) {
         MsgMocker::verifyMockSpec();
     }

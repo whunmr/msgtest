@@ -1,24 +1,8 @@
 #include <msgtest/MsgSaver.h>
 
-#include <list>
-#include <iostream>
-
 MSGTEST_NS_START
 
     void* PayloadAddressTempHolder::payloadAddr_;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    AutoRegisterTestListener::AutoRegisterTestListener() {
-        ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-        listeners.Append(this);
-    }
-
-    void AutoRegisterTestListener::deRegister() {
-        ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-        listeners.Release(this);
-    }
-
 
     ////////////////////////////////////////////////////////////////////////////
     MsgSaverBase::MsgSaverBase()
@@ -49,7 +33,7 @@ MSGTEST_NS_START
         free(*payload_mem_addr_);
         *payload_mem_addr_ = nullptr;
 
-        AutoRegisterTestListener::deRegister();
+        AutoRegTestListener::deRegister();
     }
 
 

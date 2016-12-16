@@ -1,10 +1,11 @@
 #ifndef MSGTEST_MSGSAVER_H
 #define MSGTEST_MSGSAVER_H
-#include <msgtest/msgtest_ns.h>
 #include <cstdlib>
 #include <cassert>
 #include <cstring>
 #include <gtest/gtest.h>
+#include <msgtest/listener/AutoRegTestListener.h>
+#include <msgtest/msgtest_ns.h>
 
 MSGTEST_NS_START
 
@@ -16,12 +17,7 @@ MSGTEST_NS_START
         static void* payloadAddr_;
     };
 
-    struct AutoRegisterTestListener : public ::testing::EmptyTestEventListener {
-        AutoRegisterTestListener();
-        void deRegister();
-    };
-
-    struct MsgSaverBase : AutoRegisterTestListener {
+    struct MsgSaverBase : AutoRegTestListener {
         MsgSaverBase();
         virtual void OnTestEnd(const ::testing::TestInfo& test_info);
 

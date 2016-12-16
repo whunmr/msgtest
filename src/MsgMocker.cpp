@@ -3,7 +3,6 @@
 USING_MOCKCPP_NS
 
 MSGTEST_NS_START
-
     void g_msgtest_trace_msg_probe_func(ActorId from, ActorId to, MsgId msgId, void *payload, size_t len) {
         /**/
     }
