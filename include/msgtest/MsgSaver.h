@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <cstring>
+#include <gtest/gtest.h>
 
 MSGTEST_NS_START
 
@@ -15,10 +16,14 @@ MSGTEST_NS_START
         static void* payloadAddr_;
     };
 
-    struct MsgSaverBase {
-        MsgSaverBase();
+    struct AutoRegisterTestListener : public ::testing::EmptyTestEventListener {
+        AutoRegisterTestListener();
+        void deRegister();
+    };
 
-        static void freeMsgSaverMemoryOnTestEnd();
+    struct MsgSaverBase : AutoRegisterTestListener {
+        MsgSaverBase();
+        virtual void OnTestEnd(const ::testing::TestInfo& test_info);
 
         bool operator()(size_t len);
 
