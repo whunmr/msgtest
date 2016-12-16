@@ -1,12 +1,27 @@
 #include "msgtest/listener/CollectLogTestListener.h"
+#include <msgtest/msgflow.h>
 
 MSGTEST_NS_START
 
+    std::vector<std::string> logs;
+
+    ////////////////////////////////////////////////////////////////////////////
+    void msgtest_log(const std::string &log) {
+        logs.push_back(log);
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     void CollectLogTestListener::OnTestStart(const ::testing::TestInfo &) {
+        logs.push_back("#!MF:regex:.*\\[(\\w+)\\].*---->.*\\[(\\w+)\\] (.+? *) (.*)"
+                       ", #!MF:reformat_to:src:@1, dst:@2, msg_id:@3, extra_info:@4");
+        logs.push_back("#!MF:main_actor:bob");
+        logs.push_back("#!MF:unknwn_msg_as_extra_info:");
+        logs.push_back("#!MF:draw_from_right:");
     }
 
     void CollectLogTestListener::OnTestEnd(const ::testing::TestInfo &) {
+        std::cout << draw_msgflow(logs) << std::endl;
+        logs.clear();
     }
 
     namespace {
@@ -21,19 +36,19 @@ MSGTEST_NS_START
         std::stringstream ss;
 
         if (translator_ == nullptr) {
-            ss << "Actor from: [" << from;
+            ss << "[" << from;
             ss << "] ----> [" << to;
-            ss << "] msgid: " << msgId;
+            ss << "] " << msgId;
         } else {
-            ss << "Actor from: [" << translator_->actor2String(from);
+            ss << "[" << translator_->actor2String(from);
             ss << "] ----> [" << translator_->actor2String(to);
-            ss << "] msgid: " << translator_->msg2String(from, msgId);
+            ss << "] " << translator_->msg2String(from, msgId);
         }
 
-        ss << " payload: " << payload;
-        ss << " len: " << len;
+        ss << " " << payload;
+        ss << " " << len;
 
-        std::cout << ss.str() << std::endl;
+        logs.push_back(ss.str());
     }
 
 MSGTEST_NS_END

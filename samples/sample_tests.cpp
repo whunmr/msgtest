@@ -81,7 +81,9 @@ TEST(msgtest, should_able_to__check_schedule_order___of_expected_msgs) {
     msg_interaction {
             alice ---->bob(EV_ALICE_REQ, &payload);
             alice<<----bob(EV_BOB_RSP, ___save_to(bob_to_alice_rsp));
+            msgtest_log("xxxxx");
             alice---->>bob(EV_ALICE_ACK, ___save_to(alice_to_bob_ack));
+            msgtest_log("yyyyyy");
             alice<<----bob(EV_BOB_RELEASE_RESOURCE);
     } ___end;
 

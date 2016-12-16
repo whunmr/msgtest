@@ -21,5 +21,7 @@ struct CollectLogTestListener : public ::testing::EmptyTestEventListener {
     virtual void OnTestEnd(const ::testing::TestInfo& /*test_info*/);
 };
 
+void msgtest_log(const std::string &log);
+
 MSGTEST_NS_END
 #endif //MSGTEST_TRACELOGTESTLISTENER_H
