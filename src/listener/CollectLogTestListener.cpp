@@ -26,7 +26,7 @@ MSGTEST_NS_START
                     return info.name_;
                 }
             }
-            return std::to_string(msgId);
+            return "";
         }
 
     }
@@ -61,6 +61,16 @@ MSGTEST_NS_START
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    std::string payload_content(const unsigned char* payload, size_t len) {
+        std::stringstream ss;
+        ss << std::hex;
+        for (int i = 0; i < len; ++i) {
+            if (i % 2 == 0) ss << " ";
+            ss << std::setfill('0') << std::setw(2) << (int)payload[i];
+        }
+        return ss.str();
+    }
+
     void g_collect_msg_log_func(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
         std::stringstream ss;
 
@@ -74,11 +84,13 @@ MSGTEST_NS_START
             ss << "] " << translator_->msg2String(from, msgId);
         }
 
-        ss << " " << payload;
-        ss << " " << len;
+        ss << payload_content((const unsigned char*)payload, std::min(8, (int)len));
+        ss << " len:" << std::setfill('0') << std::setw(2) << len;
         ss << " " << typeNameOfMsg(from, to, msgId);
 
         logs.push_back(ss.str());
     }
+
+
 
 MSGTEST_NS_END
