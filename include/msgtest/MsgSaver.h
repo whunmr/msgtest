@@ -6,7 +6,6 @@
 #include <cstring>
 #include <regex>
 #include <gtest/gtest.h>
-#include <msgtest/listener/AutoRegTestListener.h>
 #include <msgtest/msgtest_ns.h>
 
 MSGTEST_NS_START
@@ -19,9 +18,9 @@ MSGTEST_NS_START
         static const void* payloadAddr_;
     };
 
-    struct MsgSaverBase : AutoRegTestListener {
+    struct MsgSaverBase {
         MsgSaverBase();
-        virtual void OnTestEnd(const ::testing::TestInfo& test_info);
+        virtual ~MsgSaverBase();
 
         bool operator()(size_t len);
 

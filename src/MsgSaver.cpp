@@ -13,6 +13,18 @@ MSGTEST_NS_START
         /**/
     }
 
+    MsgSaverBase::~MsgSaverBase() {
+        //Mock predicate object will be copy construct and saved,
+        //we need to pass the address of the payload_ into the copyed Saver,
+        //then the original saver and the copyed saver both will see the same payload.
+        bool isCopyConstructedPredicate = *payload_mem_addr_ != &payload_;
+
+        if ( ! isCopyConstructedPredicate) {
+            free(*payload_mem_addr_);
+            *payload_mem_addr_ = nullptr;
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     //Called by through ::mockcpp::checkWith( bool(*)(T) )
     bool MsgSaverBase::operator()(size_t len) {
@@ -28,13 +40,5 @@ MSGTEST_NS_START
         }
         return true;
     }
-
-    void MsgSaverBase::OnTestEnd(const ::testing::TestInfo &test_info) {
-        free(*payload_mem_addr_);
-        *payload_mem_addr_ = nullptr;
-
-        AutoRegTestListener::deRegister();
-    }
-
 
 MSGTEST_NS_END

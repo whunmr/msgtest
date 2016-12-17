@@ -12,6 +12,8 @@ struct MyAppLogTranslator : LogTranslator {
         switch(actorId) {
             case id_of_alice: return "alice";
             case id_of_bob  : return "bob";
+            case id_of_clair: return "clair";
+            case id_of_dan:   return "dan";
         }
         return std::to_string(actorId);
     }
@@ -22,6 +24,8 @@ struct MyAppLogTranslator : LogTranslator {
             case EV_BOB_RSP:              return "EV_BOB_RSP";
             case EV_ALICE_ACK:            return "EV_ALICE_ACK";
             case EV_BOB_RELEASE_RESOURCE: return "EV_BOB_RELEASE_RESOURCE";
+            case EV_ALICE_TO_C_IND:       return "EV_ALICE_TO_C_IND";
+            case EV_ALICE_TO_D_IND:       return "EV_ALICE_TO_D_IND";
         }
         return std::to_string(msgId);
     }

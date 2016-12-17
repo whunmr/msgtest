@@ -5,19 +5,18 @@ USING_MOCKCPP_NS
 
 MSGTEST_NS_START
 
-    extern void g_msgtest_trace_msg_probe_func(ActorId from, ActorId to, MsgId, void*, size_t);
-
-    void MsgInteraction::setup_mocks___and___execute() {
-        TestPhase::phase_ = TestPhase::SetupMockPhase;
-        exec();
-
-        MsgMocker::setupDefaultMock();
-
-        TestPhase::phase_ = TestPhase::ExecuteMsgInteractionPhase;
-        exec();
-
-        MsgMocker::verifyMockSpec();
-    }
+//
+//    void MsgInteraction::setup_mocks___and___execute() {
+//        TestPhase::phase_ = TestPhase::SetupMockPhase;
+//        exec();
+//
+//        MsgMocker::setupDefaultMock();
+//
+//        TestPhase::phase_ = TestPhase::ExecuteMsgInteractionPhase;
+//        exec();
+//
+//        MsgMocker::verifyMockSpec();
+//    }
 
 
 MSGTEST_NS_END

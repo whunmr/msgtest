@@ -33,6 +33,12 @@ void msg_proc_of_alice(ActorId from, MsgId msgId, const void* payload, size_t le
         ack.fieldA = kfieldA_value_in_alice_to_bob_ack;
         g_app_msg_loop(id_of_alice, id_of_bob, EV_ALICE_ACK, &ack, sizeof(ack));
     }
+
+    if (msgId == EV_BOB_RELEASE_RESOURCE) {
+        MsgPayloadRsp rsp;
+        g_app_msg_loop(id_of_alice, id_of_clair, EV_ALICE_TO_C_IND, &rsp, sizeof(rsp));
+        g_app_msg_loop(id_of_alice, id_of_dan, EV_ALICE_TO_D_IND, &rsp, sizeof(rsp));
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

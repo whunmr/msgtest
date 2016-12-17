@@ -21,7 +21,7 @@ TEST(msgtest, should_able_to__auto_detect_payload_len___according_payload_type) 
 TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob) {
     static MsgPayload payload;
 
-    msg_interaction {
+    msg_interaction_ex {
             alice ---->bob(EV_ALICE_REQ, &payload);
             alice<<----bob(EV_BOB_RSP);
     } ___end;
@@ -30,7 +30,7 @@ TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob) {
 TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob____in_reverse_messaging_direction_of_DSL) {
     static MsgPayload payload;
 
-    msg_interaction {
+    msg_interaction_ex {
             bob<---- alice(EV_ALICE_REQ, &payload);
             bob---->>alice(EV_BOB_RSP);
     } ___end;
@@ -39,13 +39,13 @@ TEST(msgtest, should_able_to__check_expected___ack_msg_from_bob____in_reverse_me
 TEST(msgtest, should_able_to__support__multiple__msg_interaction) {
     static MsgPayload payload;
 
-    msg_interaction {
+    msg_interaction_ex {
             alice ---->bob(EV_ALICE_REQ, &payload);
             alice<<----bob(EV_BOB_RSP);
     } ___end;
 
 
-    msg_interaction {
+    msg_interaction_ex {
             bob<---- alice(EV_ALICE_REQ, &payload);
             bob---->>alice(EV_BOB_RSP);
     } ___end;
@@ -57,7 +57,7 @@ TEST(msgtest, should_able_to__save_msg_payload___for_further_check_and_inspectio
 
     static MsgPayload payload;
 
-    msg_interaction {
+    msg_interaction_ex {
             alice ---->bob(EV_ALICE_REQ, &payload);
             alice<<----bob(EV_BOB_RSP, ___save_to(rspMsg));
     } ___end;
@@ -72,7 +72,7 @@ TEST(msgtest, should_able_to__check_schedule_order___of_expected_msgs) {
     static MsgSaver<MsgPayload> alice_to_bob_ack;
 
     static MsgPayload payload;
-    msg_interaction {
+    msg_interaction_ex {
             alice ---->bob(EV_ALICE_REQ, &payload);
             alice<<----bob(EV_BOB_RSP, ___save_to(bob_to_alice_rsp));
             msgtest_log("xxxxx");

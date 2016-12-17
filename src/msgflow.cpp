@@ -324,15 +324,4 @@ string draw_msgflow(const vector<string>& lines) {
 }
 
 MSGTEST_NS_END
-//int main(int argc, char** argv) {
-//    string line;
-//    vector<string> lines;
-//    while (std::getline(std::cin, line)) {
-//        lines.push_back(line);
-//    }
-//
-//    cout << draw_msgflow(lines);
-//
-//    return 0;
-//}
 
