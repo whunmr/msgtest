@@ -59,7 +59,7 @@ TEST(msgtest, should_able_to__support__multiple__msg_interaction) {
 
 
 TEST(msgtest, should_able_to__save_msg_payload___for_further_check_and_inspection) {
-    static MsgSaver<MsgPayload> rspMsg;
+    static MsgSaver<MsgPayloadRsp> rspMsg;
 
     static MsgPayload payload;
 
@@ -74,22 +74,22 @@ TEST(msgtest, should_able_to__save_msg_payload___for_further_check_and_inspectio
 }
 
 TEST(msgtest, should_able_to__check_schedule_order___of_expected_msgs) {
-    static MsgSaver<MsgPayload> bob_to_alice_rsp;
+    static MsgSaver<MsgPayloadRsp> bob_to_alice_rsp;
     static MsgSaver<MsgPayload> alice_to_bob_ack;
 
     static MsgPayload payload;
     msg_interaction {
             alice ---->bob(EV_ALICE_REQ, &payload);
-            alice<<----bob(EV_BOB_RSP, ___save_to(bob_to_alice_rsp));
-            msgtest_log("xxxxx");
-            alice---->>bob(EV_ALICE_ACK, ___save_to(alice_to_bob_ack));
-            msgtest_log("yyyyyy");
-            alice<<----bob(EV_BOB_RELEASE_RESOURCE);
+            alice<<----bob(EV_BOB_RSP             , ___save_to(bob_to_alice_rsp));
+            alice---->>bob(EV_ALICE_ACK           , ___save_to(alice_to_bob_ack));
+            alice<<----bob(EV_BOB_RELEASE_RESOURCE, ___type(MsgPayloadXXXXX));
     } ___end;
 
     EXPECT_EQ(kfieldA_value_in_bob_to_alice_rsp, bob_to_alice_rsp->fieldA);
     EXPECT_EQ(kfieldA_value_in_alice_to_bob_ack, alice_to_bob_ack->fieldA);
 }
 
-TEST(msgtest, should_able_to__express__payload_struct_info___in_DSL) {
+TEST(msgtest, xx_should_able_to__express__payload_struct_info___in_DSL) {
+    MsgPayload payload;
+    alice<----bob(EV_ALICE_REQ, &payload);
 }

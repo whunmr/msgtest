@@ -1,8 +1,10 @@
 #ifndef MSGTEST_MSGSAVER_H
 #define MSGTEST_MSGSAVER_H
+
 #include <cstdlib>
 #include <cassert>
 #include <cstring>
+#include <regex>
 #include <gtest/gtest.h>
 #include <msgtest/listener/AutoRegTestListener.h>
 #include <msgtest/msgtest_ns.h>
@@ -10,11 +12,11 @@
 MSGTEST_NS_START
 
     struct PayloadAddressTempHolder {
-        bool operator()(void *payload) {
+        bool operator()(const void *payload) {
             payloadAddr_ = payload;
             return true;
         }
-        static void* payloadAddr_;
+        static const void* payloadAddr_;
     };
 
     struct MsgSaverBase : AutoRegTestListener {
@@ -42,7 +44,11 @@ MSGTEST_NS_START
     };
 
 
-    #define ___save_to(MSG_SAVER) checkWith(PayloadAddressTempHolder()), checkWith(MSG_SAVER)
+    #define ___save_to(MSG_SAVER)              \
+        checkWith(PayloadAddressTempHolder()), \
+        checkWith(MSG_SAVER),                  \
+        std::regex_replace(boost::core::demangle(typeid(MSG_SAVER).name()), std::regex(".*<(.*)>"), "$1")
+
 
 MSGTEST_NS_END
 #endif //MSGTEST_MSGSAVER_H

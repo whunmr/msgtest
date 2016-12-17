@@ -6,7 +6,7 @@
 #include <msgtest/Typedefs.h>
 MSGTEST_NS_START
 
-extern void g_collect_msg_log_func(ActorId from, ActorId to, MsgId, void*, size_t);
+extern void g_collect_msg_log_func(ActorId from, ActorId to, MsgId, const void*, size_t);
 
 ////////////////////////////////////////////////////////////////////////////////
 struct LogTranslator {

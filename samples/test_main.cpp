@@ -31,8 +31,6 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
     MSGTEST_SET_SCHEDULE_MSG_FUNC(g_app_msg_loop);
-    //MSGTEST_SET_MSG_TO_STRING_FUNC(g_msg_to_string_func);        //TODO:
-    //MSGTEST_SET_ACTOR_TO_STRING_FUNC(g_actor_to_string_func);  //TODO:
     CollectLogTestListener::setLogTranslator(*(new MyAppLogTranslator));
 
     return RUN_ALL_TESTS();

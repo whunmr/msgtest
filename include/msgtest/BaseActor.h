@@ -19,19 +19,22 @@ struct ActorMixinRole {
 struct ExpectedMsgSpecHolder : ActorMixinRole {
     using Constraint = mockcpp::Constraint;
 
-    void holdMsgSpec(MsgId expectedMsgId, Constraint* payloadConstraint, Constraint* lenConstraint) {
+    void holdMsgSpec(MsgId expectedMsgId, Constraint* payloadConstraint, Constraint* lenConstraint, const std::string& msgType) {
         expectedMsgId_ = expectedMsgId;
         payloadConstraint_ = payloadConstraint;
         lenConstraint_ = lenConstraint;
+        msgType_ = msgType;
     }
 
     MsgId expectedMsgId_;
     Constraint* payloadConstraint_;
     Constraint* lenConstraint_;
+    std::string msgType_;
 };
 
 struct ExpectedMsgSpecActivator : ActorMixinRole {
     void setupExpectedFromMsgSpec(ExpectedMsgSpecHolder &from) {
+        std::cout << "expected msg: " << from.msgType_ << std::endl;
         MsgMocker::setupMsgMockSpec(from.id()
                                     , id()
                                     , from.expectedMsgId_
@@ -40,6 +43,7 @@ struct ExpectedMsgSpecActivator : ActorMixinRole {
     }
 
     void setupExpectedToMsgSpec(ExpectedMsgSpecHolder &to) {
+        std::cout << "expected msg: " << to.msgType_ << std::endl;
         MsgMocker::setupMsgMockSpec(id()
                                     , to.id()
                                     , to.expectedMsgId_
@@ -52,23 +56,27 @@ struct ExpectedMsgSpecActivator : ActorMixinRole {
 struct MsgTempHolder : ActorMixinRole {
     MsgTempHolder() : msgId_(0), payload_(nullptr), len_(0) {/**/}
 
-    void holdTempMsg(MsgId msgId, void *payload, size_t len) {
-          msgId_ = msgId;
+    void holdTempMsg(MsgId msgId, const void *payload, size_t len, const std::string& payloadType) {
+        msgId_ = msgId;
         payload_ = payload;
-            len_ = len;
+        len_ = len;
+        payloadType_ = payloadType;
     }
 
     MsgId msgId_;
-    void* payload_;
+    const void* payload_;
     size_t len_;
+    std::string payloadType_;
 };
 
 struct MsgSender : ActorMixinRole {
     void sendMsg(MsgTempHolder& to) {
+        std::cout << to.payloadType_ << std::endl;
         MsgScheduler::scheduleMsg(id(), to.id(), to.msgId_, to.payload_, to.len_);
     }
 
     void receiveMsg(MsgTempHolder& from) {
+        std::cout << from.payloadType_ << std::endl;
         MsgScheduler::scheduleMsg(from.id(), id(), from.msgId_, from.payload_, from.len_);
     }
 };

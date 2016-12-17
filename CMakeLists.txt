@@ -11,9 +11,8 @@ include_directories(${MSGTEST_INCLUDE})
 
 
 include_directories(${LAB_ROOT}repo/mockcpp/include)
-include_directories(${LAB_ROOT}repo/mockcpp/3rdparty)
+#include_directories(${LAB_ROOT}repo/mockcpp/3rdparty)
 link_directories(${LAB_ROOT}repo/mockcpp/build/src/)
-
 
 enable_testing()
 find_package(GTest REQUIRED)

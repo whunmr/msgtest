@@ -25,5 +25,6 @@ do {                                                               \
 } while(0)
 
 
+#define ___type(expected_msg_type) #expected_msg_type
 
 #endif //MSGTEST_MSGTEST_H_H

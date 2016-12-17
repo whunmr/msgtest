@@ -32,7 +32,7 @@ MSGTEST_NS_START
         translator_ = &logTranslator;
     }
 
-    void g_collect_msg_log_func(ActorId from, ActorId to, MsgId msgId, void *payload, size_t len) {
+    void g_collect_msg_log_func(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
         std::stringstream ss;
 
         if (translator_ == nullptr) {

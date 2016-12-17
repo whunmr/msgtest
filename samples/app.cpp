@@ -7,9 +7,9 @@
 #include "common/MsgPayload.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-void msg_proc_of_bob(ActorId from, MsgId msgId, void* payload, size_t len) {
+void msg_proc_of_bob(ActorId from, MsgId msgId, const void* payload, size_t len) {
     if (msgId == EV_ALICE_REQ) {
-        MsgPayload payload1;
+        MsgPayloadRsp payload1;
         payload1.fieldA = kfieldA_value_in_bob_to_alice_rsp;
         payload1.fieldB = kfieldB_value_in_bob_to_alice_rsp;
         payload1.fieldC = kfieldC_value_in_bob_to_alice_rsp;
@@ -18,6 +18,7 @@ void msg_proc_of_bob(ActorId from, MsgId msgId, void* payload, size_t len) {
     }
 
     if (msgId == EV_ALICE_ACK) {
+        msgtest_log("Got ack from alice, ready to send release_resource indicator.");
         MsgPayload payload1;
         payload1.fieldA = kfieldA_value_in_bob_to_alice_release_resource;
 
@@ -26,7 +27,7 @@ void msg_proc_of_bob(ActorId from, MsgId msgId, void* payload, size_t len) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void msg_proc_of_alice(ActorId from, MsgId msgId, void* payload, size_t len) {
+void msg_proc_of_alice(ActorId from, MsgId msgId, const void* payload, size_t len) {
     if (msgId == EV_BOB_RSP) {
         MsgPayload ack;
         ack.fieldA = kfieldA_value_in_alice_to_bob_ack;
@@ -35,11 +36,11 @@ void msg_proc_of_alice(ActorId from, MsgId msgId, void* payload, size_t len) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void msg_proc_of_others(ActorId from, ActorId to, MsgId msgId, void* payload, size_t len) {
+void msg_proc_of_others(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void g_app_msg_loop(ActorId from, ActorId to, MsgId msgId, void *payload, size_t len) {
+void g_app_msg_loop(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
     MSGTEST_PROBE_MSG_SCHEDULE();
 
     if (to == id_of_bob) {

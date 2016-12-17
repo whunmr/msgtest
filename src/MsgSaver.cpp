@@ -2,7 +2,7 @@
 
 MSGTEST_NS_START
 
-    void* PayloadAddressTempHolder::payloadAddr_;
+    const void* PayloadAddressTempHolder::payloadAddr_;
 
     ////////////////////////////////////////////////////////////////////////////
     MsgSaverBase::MsgSaverBase()

@@ -1,10 +1,15 @@
 #ifndef MSGTEST_DSLACTOR_H
 #define MSGTEST_DSLACTOR_H
 
+#include <typeinfo>
+#include <boost/core/demangle.hpp>
+
 #include <cstddef>
 #include <msgtest/Typedefs.h>
 #include <msgtest/BaseActor.h>
 #include <mockcpp/mockcpp.hpp>
+#include <regex>
+
 USING_MOCKCPP_NS
 
 MSGTEST_NS_START
@@ -29,9 +34,11 @@ struct DSLActor {
         return operator()(msgid, payload, sizeof(PAYLOAD));
     }
 
-    T& operator()(MsgId msgid, void* payload, size_t len) {
-        if (TestPhase::phase_ == TestPhase::ExecuteMsgInteractionPhase)
-            as<MsgTempHolder &>().holdTempMsg(msgid, payload, len);
+    template<typename PAYLOAD>
+    T& operator()(MsgId msgid, PAYLOAD* payload, size_t len) {
+        if (TestPhase::phase_ == TestPhase::ExecuteMsgInteractionPhase) {
+            as<MsgTempHolder &>().holdTempMsg(msgid, payload, len, demangled_type_name(payload));
+        }
 
         return asActor();
     }
@@ -47,13 +54,13 @@ struct DSLActor {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    T& operator()(MsgId expectedMsgId) {
-        return operator()(expectedMsgId, any(), any());
+    T& operator()(MsgId expectedMsgId, const char* msgType = "") {
+        return operator()(expectedMsgId, any(), any(), msgType);
     }
 
-    T& operator()(MsgId expectedMsgId, Constraint* c1, Constraint* c2) {
+    T& operator()(MsgId expectedMsgId, Constraint* c1, Constraint* c2, const std::string& msgType = "") {
         if (TestPhase::phase_ == TestPhase::SetupMockPhase)
-            as<ExpectedMsgSpecHolder&>().holdMsgSpec(expectedMsgId, c1, c2);
+            as<ExpectedMsgSpecHolder&>().holdMsgSpec(expectedMsgId, c1, c2, msgType);
 
         return asActor();
     }
@@ -77,6 +84,11 @@ private:
     template<typename RefType>
     RefType as() {
         return static_cast<RefType>(asActor());
+    }
+
+    template<typename PAYLOAD>
+    const std::string demangled_type_name(PAYLOAD *payload) const {
+        return std::regex_replace(boost::core::demangle(typeid(payload).name()), std::regex("(.*)\\*"), "$1");
     }
 };
 

@@ -9,7 +9,7 @@ MSGTEST_NS_START
         scheduleMsgFunc_ = f;
     }
 
-    void MsgScheduler::scheduleMsg(ActorId from, ActorId to, MsgId msgId, void *payload, size_t len) {
+    void MsgScheduler::scheduleMsg(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
         assert((scheduleMsgFunc_ != nullptr) &&
                "Should call MsgScheduler::setScheduleMsgFunc before run tests.");
         scheduleMsgFunc_(from, to, msgId, payload, len);
