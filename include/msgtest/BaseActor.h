@@ -9,6 +9,8 @@
 #include <msgtest/MsgScheduler.h>
 #include <msgtest/MsgMocker.h>
 #include <mockcpp/Constraint.h>
+#include <msgtest/listener/CollectLogTestListener.h>
+
 MSGTEST_NS_START
 
 struct ActorMixinRole {
@@ -34,7 +36,8 @@ struct ExpectedMsgSpecHolder : ActorMixinRole {
 
 struct ExpectedMsgSpecActivator : ActorMixinRole {
     void setupExpectedFromMsgSpec(ExpectedMsgSpecHolder &from) {
-        std::cout << "expected msg: " << from.msgType_ << std::endl;
+        CollectLogTestListener::addPayloadTypeInfo(from.id(), id(), from.expectedMsgId_, from.msgType_);
+
         MsgMocker::setupMsgMockSpec(from.id()
                                     , id()
                                     , from.expectedMsgId_
@@ -43,7 +46,8 @@ struct ExpectedMsgSpecActivator : ActorMixinRole {
     }
 
     void setupExpectedToMsgSpec(ExpectedMsgSpecHolder &to) {
-        std::cout << "expected msg: " << to.msgType_ << std::endl;
+        CollectLogTestListener::addPayloadTypeInfo(id(), to.id(), to.expectedMsgId_, to.msgType_);
+
         MsgMocker::setupMsgMockSpec(id()
                                     , to.id()
                                     , to.expectedMsgId_
@@ -71,12 +75,12 @@ struct MsgTempHolder : ActorMixinRole {
 
 struct MsgSender : ActorMixinRole {
     void sendMsg(MsgTempHolder& to) {
-        std::cout << to.payloadType_ << std::endl;
+        CollectLogTestListener::addPayloadTypeInfo(id(), to.id(), to.msgId_, to.payloadType_);
         MsgScheduler::scheduleMsg(id(), to.id(), to.msgId_, to.payload_, to.len_);
     }
 
     void receiveMsg(MsgTempHolder& from) {
-        std::cout << from.payloadType_ << std::endl;
+        CollectLogTestListener::addPayloadTypeInfo(from.id(), id(), from.msgId_, from.payloadType_);
         MsgScheduler::scheduleMsg(from.id(), id(), from.msgId_, from.payload_, from.len_);
     }
 };

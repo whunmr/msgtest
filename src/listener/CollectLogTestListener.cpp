@@ -3,7 +3,33 @@
 
 MSGTEST_NS_START
 
-    std::vector<std::string> logs;
+    namespace {
+        LogTranslator *translator_;
+
+        std::vector<std::string> logs;
+
+        struct MsgTypeInfo {
+            MsgTypeInfo(ActorId from, ActorId to, MsgId msgId, const std::string &name)
+                    : from_(from), to_(to), msgId_(msgId), name_(name) {/**/}
+
+            ActorId from_;
+            ActorId to_;
+            MsgId msgId_;
+            std::string name_;
+        };
+
+        std::vector<MsgTypeInfo> msgInfos_;
+
+        std::string typeNameOfMsg(ActorId from, ActorId to, MsgId msgId) {
+            for (auto& info : msgInfos_) {
+                if (info.from_ == from && info.to_ == to && info.msgId_ == msgId) {
+                    return info.name_;
+                }
+            }
+            return std::to_string(msgId);
+        }
+
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     void msgtest_log(const std::string &log) {
@@ -24,14 +50,17 @@ MSGTEST_NS_START
         logs.clear();
     }
 
-    namespace {
-        LogTranslator *translator_;
-    }
-
     void CollectLogTestListener::setLogTranslator(LogTranslator &logTranslator) {
         translator_ = &logTranslator;
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    void CollectLogTestListener::addPayloadTypeInfo(ActorId from, ActorId to, MsgId msgId, const std::string &name) {
+        MsgTypeInfo info(from, to, msgId, name);
+        msgInfos_.push_back(info);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
     void g_collect_msg_log_func(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len) {
         std::stringstream ss;
 
@@ -47,6 +76,7 @@ MSGTEST_NS_START
 
         ss << " " << payload;
         ss << " " << len;
+        ss << " " << typeNameOfMsg(from, to, msgId);
 
         logs.push_back(ss.str());
     }

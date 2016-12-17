@@ -16,6 +16,7 @@ struct LogTranslator {
 
 struct CollectLogTestListener : public ::testing::EmptyTestEventListener {
     static void setLogTranslator(LogTranslator&);
+    static void addPayloadTypeInfo(ActorId from, ActorId to, MsgId msgId, const std::string& type);
 
     virtual void OnTestStart(const ::testing::TestInfo& /*test_info*/);
     virtual void OnTestEnd(const ::testing::TestInfo& /*test_info*/);
