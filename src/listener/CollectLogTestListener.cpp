@@ -8,19 +8,25 @@ MSGTEST_NS_START
 
         std::vector<std::string> logs;
 
-        struct MsgTypeInfo {
-            MsgTypeInfo(ActorId from, ActorId to, MsgId msgId, const std::string &name)
-                    : from_(from), to_(to), msgId_(msgId), name_(name) {/**/}
+        enum MsgType {
+            MT_STIMULATE_INPUT,
+            MT_EXPECTED_RESPONSE
+        };
+
+        struct MsgInfo {
+            MsgInfo(ActorId from, ActorId to, MsgId msgId, const std::string &name, MsgType msgType)
+                    : from_(from), to_(to), msgId_(msgId), name_(name), msgType_(msgType) {/**/}
 
             ActorId from_;
             ActorId to_;
             MsgId msgId_;
             std::string name_;
+            MsgType msgType_;
         };
 
-        std::vector<MsgTypeInfo> msgInfos_;
+        std::vector<MsgInfo> msgInfos_;
 
-        std::string typeNameOfMsg(ActorId from, ActorId to, MsgId msgId) {
+        std::string payloadTypeOfMsg(ActorId from, ActorId to, MsgId msgId) {
             for (auto& info : msgInfos_) {
                 if (info.from_ == from && info.to_ == to && info.msgId_ == msgId) {
                     return info.name_;
@@ -29,6 +35,18 @@ MSGTEST_NS_START
             return "";
         }
 
+        std::string typeOfMsg(ActorId from, ActorId to, MsgId msgId) {
+            for (auto& info : msgInfos_) {
+                if (info.from_ == from && info.to_ == to && info.msgId_ == msgId) {
+                    if (info.msgType_ == MT_STIMULATE_INPUT) {
+                        return "<input>";
+                    } else if (info.msgType_ == MT_EXPECTED_RESPONSE) {
+                        return "<expected>";
+                    }
+                }
+            }
+            return "<not_care>";
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -38,8 +56,8 @@ MSGTEST_NS_START
 
     ////////////////////////////////////////////////////////////////////////////
     void CollectLogTestListener::OnTestStart(const ::testing::TestInfo &) {
-        logs.push_back("#!MF:regex:.*\\[(\\w+)\\].*---->.*\\[(\\w+)\\] (.+? *) (.*)"
-                       ", #!MF:reformat_to:src:@1, dst:@2, msg_id:@3, extra_info:@4");
+        logs.push_back("#!MF:regex:.*\\[(\\w+)\\].*---->.*\\[(\\w+)\\] (.+? *) <(.*?)> (.*)"
+                       ", #!MF:reformat_to:src:@1, dst:@2, msg_id:@3, msg_type:@4, extra_info:@5");
         logs.push_back("#!MF:main_actor:bob");
         logs.push_back("#!MF:unknwn_msg_as_extra_info:");
         logs.push_back("#!MF:draw_from_right:");
@@ -55,8 +73,13 @@ MSGTEST_NS_START
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    void CollectLogTestListener::addPayloadTypeInfo(ActorId from, ActorId to, MsgId msgId, const std::string &name) {
-        MsgTypeInfo info(from, to, msgId, name);
+    void CollectLogTestListener::addStimulateMsgInfo(ActorId from, ActorId to, MsgId msgId, const std::string &name) {
+        MsgInfo info(from, to, msgId, name, MT_STIMULATE_INPUT);
+        msgInfos_.push_back(info);
+    }
+
+    void CollectLogTestListener::addExpectedMsgInfo(ActorId from, ActorId to, MsgId msgId, const std::string &name) {
+        MsgInfo info(from, to, msgId, name, MT_EXPECTED_RESPONSE);
         msgInfos_.push_back(info);
     }
 
@@ -84,9 +107,10 @@ MSGTEST_NS_START
             ss << "] " << translator_->msg2String(from, msgId);
         }
 
+        ss << " " << typeOfMsg(from, to, msgId);
         ss << payload_content((const unsigned char*)payload, std::min(8, (int)len));
         ss << " len:" << std::setfill('0') << std::setw(2) << len;
-        ss << " " << typeNameOfMsg(from, to, msgId);
+        ss << " " << payloadTypeOfMsg(from, to, msgId);
 
         logs.push_back(ss.str());
     }

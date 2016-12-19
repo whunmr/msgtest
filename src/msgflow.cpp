@@ -22,14 +22,6 @@ namespace strings {
         }
         return tmp;
     }
-
-    template <typename T>
-    static string from_num(T num)
-    {
-        ostringstream ss;
-        ss << num;
-        return ss.str();
-    }
 }
 
 MSGTEST_NS_START
@@ -116,8 +108,8 @@ struct SeparatorMsgFlow : public MsgFlow {
 };
 
 struct ArrowMsgFlow : public MsgFlow {
-    ArrowMsgFlow(const string& src, const string& dst, const string& msg_id, const string& extra_info)
-            : MsgFlow(src, dst), msg_id_(msg_id), extra_info_(extra_info) {
+    ArrowMsgFlow(const string& src, const string& dst, const string& msg_id, const string& msg_type, const string& extra_info)
+            : MsgFlow(src, dst), msg_id_(msg_id), msg_type_(msg_type), extra_info_(extra_info) {
         if (msg_id.length() > max_msg_id_len_) {
             max_msg_id_len_ = msg_id.length();
         }
@@ -125,6 +117,13 @@ struct ArrowMsgFlow : public MsgFlow {
 
     string draw_arrow_on_template_line(const string& template_line, int start_pos, int end_pos) const {
         string tmp = template_line;
+        char line_char = '~';
+
+        if (msg_type_ == "expected") {
+            line_char = '=';
+        } else if (msg_type_ == "input") {
+            line_char = '-';
+        }
 
         if (start_pos == end_pos) {
             tmp[start_pos] = '*';
@@ -133,9 +132,9 @@ struct ArrowMsgFlow : public MsgFlow {
 
             string arrow;
             if (start_pos > end_pos)
-                arrow = "<" + string(arrow_length-1, '-');
+                arrow = "<" + string(arrow_length-1, line_char);
             else
-                arrow = string(arrow_length-1, '-') + ">";
+                arrow = string(arrow_length-1, line_char) + ">";
 
             tmp.replace(min(start_pos, end_pos) + 1, arrow.length(), arrow);
         }
@@ -148,7 +147,10 @@ struct ArrowMsgFlow : public MsgFlow {
         string pad = string(max_msg_id_len_ - msg_id_.length(), ' ');
         ret += msg_id_ + pad + "   ";
         if (mfo.unknwn_msg_as_extra_info_) {
-            ret += "[" + strings::from_num(draw_index)  + "] ";
+            ret += "[" + std::to_string(draw_index)  + "] ";
+            if (draw_index < 10) {
+                ret += " ";
+            }
         }
 
         ret += extra_info_ + "\n";
@@ -156,6 +158,7 @@ struct ArrowMsgFlow : public MsgFlow {
     }
 
     string msg_id_;
+    string msg_type_; //stimulate_input, expected, or do_not_cared msg.
     string extra_info_;
 
     static size_t max_msg_id_len_;
@@ -206,8 +209,8 @@ struct MFExtractor {
         }
 
         std::smatch what;
-        if (std::regex_match(reformat_to, what, std::regex("^src:(.*), dst:(.*), msg_id:(.*), extra_info:(.*)$"))) {
-            return new ArrowMsgFlow(what[1], what[2], what[3], what[4]);
+        if (std::regex_match(reformat_to, what, std::regex("^src:(.*), dst:(.*), msg_id:(.*), msg_type:(.*), extra_info:(.*)$"))) {
+            return new ArrowMsgFlow(what[1], what[2], what[3], what[4], what[5]);
         }
 
         return NULL;
@@ -304,7 +307,7 @@ string draw_msgflow(const vector<string>& lines) {
             if (extracted) {
                 ++msg_flow_index;
             } else {
-                unknown_flow_infos += "[" + strings::from_num(msg_flow_index) + "] " + *i + "\n";
+                unknown_flow_infos += "[" + std::to_string(msg_flow_index) + "] " + *i + "\n";
             }
         }
     }

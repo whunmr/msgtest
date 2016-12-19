@@ -36,7 +36,7 @@ struct ExpectedMsgSpecHolder : ActorMixinRole {
 
 struct ExpectedMsgSpecActivator : ActorMixinRole {
     void setupExpectedFromMsgSpec(ExpectedMsgSpecHolder &from) {
-        CollectLogTestListener::addPayloadTypeInfo(from.id(), id(), from.expectedMsgId_, from.msgType_);
+        CollectLogTestListener::addExpectedMsgInfo(from.id(), id(), from.expectedMsgId_, from.msgType_);
 
         MsgMocker::setupMsgMockSpec(from.id()
                                     , id()
@@ -46,7 +46,7 @@ struct ExpectedMsgSpecActivator : ActorMixinRole {
     }
 
     void setupExpectedToMsgSpec(ExpectedMsgSpecHolder &to) {
-        CollectLogTestListener::addPayloadTypeInfo(id(), to.id(), to.expectedMsgId_, to.msgType_);
+        CollectLogTestListener::addExpectedMsgInfo(id(), to.id(), to.expectedMsgId_, to.msgType_);
 
         MsgMocker::setupMsgMockSpec(id()
                                     , to.id()
@@ -75,12 +75,12 @@ struct MsgTempHolder : ActorMixinRole {
 
 struct MsgSender : ActorMixinRole {
     void sendMsg(MsgTempHolder& to) {
-        CollectLogTestListener::addPayloadTypeInfo(id(), to.id(), to.msgId_, to.payloadType_);
+        CollectLogTestListener::addStimulateMsgInfo(id(), to.id(), to.msgId_, to.payloadType_);
         MsgScheduler::scheduleMsg(id(), to.id(), to.msgId_, to.payload_, to.len_);
     }
 
     void receiveMsg(MsgTempHolder& from) {
-        CollectLogTestListener::addPayloadTypeInfo(from.id(), id(), from.msgId_, from.payloadType_);
+        CollectLogTestListener::addStimulateMsgInfo(from.id(), id(), from.msgId_, from.payloadType_);
         MsgScheduler::scheduleMsg(from.id(), id(), from.msgId_, from.payload_, from.len_);
     }
 };
