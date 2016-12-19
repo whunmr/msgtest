@@ -19,6 +19,10 @@ struct MyAppLogTranslator : LogTranslator {
     }
 
     virtual std::string msg2String(ActorId fromActorId, MsgId msgId) const {
+        return getString(msgId) + "=" + std::to_string(msgId);
+    }
+
+    std::string getString(MsgId msgId) const {
         switch(msgId) {
             case EV_ALICE_REQ:            return "EV_ALICE_REQ";
             case EV_BOB_RSP:              return "EV_BOB_RSP";
@@ -26,6 +30,8 @@ struct MyAppLogTranslator : LogTranslator {
             case EV_BOB_RELEASE_RESOURCE: return "EV_BOB_RELEASE_RESOURCE";
             case EV_ALICE_TO_C_IND:       return "EV_ALICE_TO_C_IND";
             case EV_ALICE_TO_D_IND:       return "EV_ALICE_TO_D_IND";
+            case EV_DAN_TO_ALICE:         return "EV_DAN_TO_ALICE";
+            case EV_ALICE_REL_ACK:        return "EV_ALICE_REL_ACK";
         }
         return std::to_string(msgId);
     }
@@ -34,7 +40,7 @@ struct MyAppLogTranslator : LogTranslator {
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
-    MSGTEST_SET_SCHEDULE_MSG_FUNC(g_app_msg_loop);
+    MSGTEST_SET_SCHEDULE_MSG_FUNC(schedule_test_msgs);
     CollectLogTestListener::setLogTranslator(*(new MyAppLogTranslator));
 
     return RUN_ALL_TESTS();

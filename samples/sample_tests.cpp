@@ -8,9 +8,12 @@ USING_MSGTEST_NS
 #include "common/MsgPayload.h"
 #include "common/MsgId.h"
 #include "app_ids.h"
+#include "app.h"
 
-StubActor alice(id_of_alice);
-UnderTestActor bob(id_of_bob);
+StubActor alice(id_of_alice, msg_proc_of_alice);
+StubActor bob(id_of_bob, msg_proc_of_bob);
+StubActor clair(id_of_clair, msg_proc_of_clair);
+StubActor dan(id_of_dan, msg_proc_of_dan);
 
 TEST(msgtest, should_able_to_support_send_stub_msg__in__DSL_style) {
     MsgPayload payload;
@@ -81,9 +84,27 @@ TEST(msgtest, should_able_to__check_schedule_order___of_expected_msgs) {
     MsgPayload payload;
 
     msg_interaction(
+                alice ------>bob(EV_ALICE_REQ, &payload);
+                alice<<------bob(EV_BOB_RSP             , ___save_to(bob_to_alice_rsp));
+                alice------>>bob(EV_ALICE_ACK           , ___save_to(alice_to_bob_ack));
+                alice<<------bob(EV_BOB_RELEASE_RESOURCE, ___type(MsgPayloadXXXXX));
+                alice------>>bob(EV_ALICE_REL_ACK       , ___type(MsgPayloadYYY));
+    );
+
+    EXPECT_EQ(kfieldA_value_in_bob_to_alice_rsp, bob_to_alice_rsp->fieldA);
+    EXPECT_EQ(kfieldA_value_in_alice_to_bob_ack, alice_to_bob_ack->fieldA);
+}
+
+TEST(msgtest, DISABLED_should_able_to__using_fake_alice) {
+    MsgSaver<MsgPayloadRsp> bob_to_alice_rsp;
+    MsgSaver<MsgPayload> alice_to_bob_ack;
+
+    MsgPayload payload;
+
+    msg_interaction(
             alice ------>bob(EV_ALICE_REQ, &payload);
             alice<<------bob(EV_BOB_RSP             , ___save_to(bob_to_alice_rsp));
-            alice------>>bob(EV_ALICE_ACK           , ___save_to(alice_to_bob_ack));
+            alice ------>bob(EV_ALICE_ACK, &payload);
             alice<<------bob(EV_BOB_RELEASE_RESOURCE, ___type(MsgPayloadXXXXX));
     );
 
@@ -91,3 +112,15 @@ TEST(msgtest, should_able_to__check_schedule_order___of_expected_msgs) {
     EXPECT_EQ(kfieldA_value_in_alice_to_bob_ack, alice_to_bob_ack->fieldA);
 }
 
+TEST(msgtest, xxxx_should_able_to__save_msg_payload___for_further_check_and_inspection) {
+    MsgSaver<MsgPayloadRsp> rspMsg;
+
+    MsgPayload payload;
+
+    alice.offline();
+
+    msg_interaction(
+            alice ---->bob(EV_ALICE_REQ, &payload);
+            alice<<----bob(EV_BOB_RSP, ___save_to(rspMsg));
+    );
+}

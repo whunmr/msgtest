@@ -8,7 +8,7 @@
 MSGTEST_NS_START
 
 struct StubActor : BaseActor, DSLActor<StubActor> {
-    StubActor(ActorId actorId);
+    StubActor(ActorId actorId, MsgProcFunc f);
 };
 
 MSGTEST_NS_END

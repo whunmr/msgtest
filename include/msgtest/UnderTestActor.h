@@ -6,10 +6,10 @@
 #include <msgtest/msgtest_ns.h>
 
 MSGTEST_NS_START
-
-struct UnderTestActor : BaseActor, DSLActor<UnderTestActor> {
-    UnderTestActor(ActorId actorId);
-};
+//
+//struct UnderTestActor : BaseActor, DSLActor<UnderTestActor> {
+//    UnderTestActor(ActorId actorId);
+//};
 
 MSGTEST_NS_END
 #endif //MSGTEST_UNDERTESTACTOR_H

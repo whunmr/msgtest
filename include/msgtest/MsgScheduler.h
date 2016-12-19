@@ -5,14 +5,19 @@
 #include <msgtest/msgtest_ns.h>
 #include <cstddef>
 #include <functional>
+
 MSGTEST_NS_START
 
-typedef std::function<void(ActorId, ActorId, MsgId, const void*, size_t)> ScheduleMsgFunc;
+    void msgtest_dispatch_test_msg(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len);
 
-struct MsgScheduler {
-    static void setScheduleMsgFunc(ScheduleMsgFunc);
-    static void scheduleMsg(ActorId, ActorId, MsgId, const void*, size_t);
-};
+    typedef std::function<void(ActorId, ActorId, MsgId, const void *, size_t)> ScheduleMsgFunc;
+    typedef std::function<void(ActorId from, MsgId, const void *, size_t)> MsgProcFunc;
+
+    struct MsgScheduler {
+        static void registerMsgProcFunc(ActorId actorId, MsgProcFunc f);
+
+        static void scheduleMsg(ActorId, ActorId, MsgId, const void *, size_t);
+    };
 
 MSGTEST_NS_END
 #endif //MSGTEST_MSGHOOKS_H

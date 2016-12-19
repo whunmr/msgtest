@@ -5,4 +5,9 @@ USING_MSGTEST_NS
 
 void g_app_msg_loop(ActorId from, ActorId to, MsgId msgId, const void *payload, size_t len);
 
+void msg_proc_of_alice(ActorId from, MsgId msgId, const void* payload, size_t len);
+void msg_proc_of_bob(ActorId from, MsgId msgId, const void* payload, size_t len);
+void msg_proc_of_clair(ActorId from, MsgId msgId, const void* payload, size_t len);
+void msg_proc_of_dan(ActorId from, MsgId msgId, const void* payload, size_t len);
+
 #endif //MSGTEST_APP_H

@@ -2,6 +2,6 @@
 
 MSGTEST_NS_START
 
-UnderTestActor::UnderTestActor(ActorId actorId) : BaseActor(actorId) {/**/}
+//UnderTestActor::UnderTestActor(ActorId actorId) : BaseActor(actorId) {/**/}
 
 MSGTEST_NS_END

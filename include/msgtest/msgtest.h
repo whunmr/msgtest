@@ -11,7 +11,6 @@
 
 #define MSGTEST_SET_SCHEDULE_MSG_FUNC(msg_schedule_func)                                        \
 do {                                                                                            \
-    MsgScheduler::setScheduleMsgFunc(msg_schedule_func);                                        \
     ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners(); \
     listeners.Append(new VerifyMockTestListener);                                               \
     listeners.Append(new CollectLogTestListener);                                               \
@@ -23,6 +22,7 @@ do {                                                               \
     g_msgtest_trace_msg_probe_func(from, to, msgId, payload, len); \
     g_collect_msg_log_func(from, to, msgId, payload, len);         \
 } while(0)
+
 
 
 #define ___type(expected_msg_type) #expected_msg_type
