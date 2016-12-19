@@ -65,7 +65,6 @@ struct DSLActor {
         return asActor();
     }
 
-
     void operator<<(ExpectedMsgSpecHolder& h) {
         if (TestPhase::phase_ == TestPhase::SetupMockPhase)
             as<ExpectedMsgSpecActivator &>().setupExpectedFromMsgSpec(h);
