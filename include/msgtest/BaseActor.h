@@ -82,7 +82,14 @@ MSGTEST_NS_START
 ////////////////////////////////////////////////////////////////////////////////
     struct BaseActor : MsgTempHolder, MsgSender, ExpectedMsgSpecHolder, ExpectedMsgSpecActivator {
         BaseActor(ActorId actorId, MsgProcFunc f) : actorId_(actorId), msgProcFunc_(f), isOnline_(true) {
-            MsgScheduler::registerMsgProcFunc(actorId, f);
+
+            auto handleMsgIfOnline = [f, this](ActorId from, MsgId msgId, const void *payload, size_t len) {
+                if (this->isOnline()) {
+                    f(from, msgId, payload, len);
+                }
+            };
+
+            MsgScheduler::registerMsgProcFunc(actorId, handleMsgIfOnline);
         }
 
         void offline() {

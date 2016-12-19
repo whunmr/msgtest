@@ -95,12 +95,12 @@ TEST(msgtest, should_able_to__check_schedule_order___of_expected_msgs) {
     EXPECT_EQ(kfieldA_value_in_alice_to_bob_ack, alice_to_bob_ack->fieldA);
 }
 
-TEST(msgtest, DISABLED_should_able_to__using_fake_alice) {
+TEST(msgtest, should_able_to__let_actor_offline) {
     MsgSaver<MsgPayloadRsp> bob_to_alice_rsp;
-    MsgSaver<MsgPayload> alice_to_bob_ack;
 
     MsgPayload payload;
 
+    alice.offline();
     msg_interaction(
             alice ------>bob(EV_ALICE_REQ, &payload);
             alice<<------bob(EV_BOB_RSP             , ___save_to(bob_to_alice_rsp));
@@ -109,18 +109,5 @@ TEST(msgtest, DISABLED_should_able_to__using_fake_alice) {
     );
 
     EXPECT_EQ(kfieldA_value_in_bob_to_alice_rsp, bob_to_alice_rsp->fieldA);
-    EXPECT_EQ(kfieldA_value_in_alice_to_bob_ack, alice_to_bob_ack->fieldA);
 }
 
-TEST(msgtest, xxxx_should_able_to__save_msg_payload___for_further_check_and_inspection) {
-    MsgSaver<MsgPayloadRsp> rspMsg;
-
-    MsgPayload payload;
-
-    alice.offline();
-
-    msg_interaction(
-            alice ---->bob(EV_ALICE_REQ, &payload);
-            alice<<----bob(EV_BOB_RSP, ___save_to(rspMsg));
-    );
-}

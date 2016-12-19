@@ -66,6 +66,7 @@ MSGTEST_NS_START
     void CollectLogTestListener::OnTestEnd(const ::testing::TestInfo &) {
         std::cout << draw_msgflow(logs) << std::endl;
         logs.clear();
+        msgInfos_.clear();
     }
 
     void CollectLogTestListener::setLogTranslator(LogTranslator &logTranslator) {
