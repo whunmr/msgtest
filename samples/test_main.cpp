@@ -39,9 +39,6 @@ struct MyAppLogTranslator : LogTranslator {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-
-    MSGTEST_SET_SCHEDULE_MSG_FUNC(schedule_test_msgs);
-    CollectLogTestListener::setLogTranslator(*(new MyAppLogTranslator));
-
+    ::msgtest::InitMsgTest(new MyAppLogTranslator);
     return RUN_ALL_TESTS();
 }

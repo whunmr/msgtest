@@ -4,7 +4,7 @@
 MSGTEST_NS_START
 
     namespace {
-        LogTranslator *translator_;
+        const LogTranslator *translator_;
 
         std::vector<std::string> logs;
 
@@ -69,7 +69,7 @@ MSGTEST_NS_START
         msgInfos_.clear();
     }
 
-    void CollectLogTestListener::setLogTranslator(LogTranslator &logTranslator) {
+    void CollectLogTestListener::setLogTranslator(const LogTranslator &logTranslator) {
         translator_ = &logTranslator;
     }
 

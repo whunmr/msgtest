@@ -19,7 +19,7 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
 
-set(SOURCE_FILES src/StubActor.cpp include/msgtest/StubActor.h include/msgtest/msgtest.h include/msgtest/DSLActor.h include/msgtest/Typedefs.h include/msgtest/BaseActor.h include/msgtest/msgtest_ns.h src/MsgScheduler.cpp include/msgtest/MsgScheduler.h src/MsgMocker.cpp include/msgtest/MsgMocker.h src/DSLActor.cpp include/msgtest/MsgInteraction.h include/msgtest/Macros.h src/MsgSaver.cpp include/msgtest/MsgSaver.h include/msgtest/listener/VerifyMockTestListener.h src/AutoRegTestListener.cpp include/msgtest/listener/AutoRegTestListener.h src/listener/CollectLogTestListener.cpp include/msgtest/listener/CollectLogTestListener.h src/msgflow.cpp include/msgtest/msgflow.h)
+set(SOURCE_FILES src/StubActor.cpp include/msgtest/StubActor.h include/msgtest/msgtest.h include/msgtest/DSLActor.h include/msgtest/Typedefs.h include/msgtest/BaseActor.h include/msgtest/msgtest_ns.h src/MsgScheduler.cpp include/msgtest/MsgScheduler.h src/MsgMocker.cpp include/msgtest/MsgMocker.h src/DSLActor.cpp include/msgtest/MsgInteraction.h include/msgtest/Macros.h src/MsgSaver.cpp include/msgtest/MsgSaver.h include/msgtest/listener/VerifyMockTestListener.h src/listener/CollectLogTestListener.cpp include/msgtest/listener/CollectLogTestListener.h src/msgflow.cpp include/msgtest/msgflow.h src/msgtest.cpp)
 add_library(msgtest ${SOURCE_FILES})
 
 
