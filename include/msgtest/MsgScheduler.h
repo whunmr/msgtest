@@ -17,6 +17,8 @@ MSGTEST_NS_START
         static void registerMsgProcFunc(ActorId actorId, MsgProcFunc f);
 
         static void scheduleMsg(ActorId, ActorId, MsgId, const void *, size_t);
+
+        static void procAllBufferedMsg();
     };
 
 MSGTEST_NS_END

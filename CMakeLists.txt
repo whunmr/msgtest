@@ -3,16 +3,16 @@ project(msgtest)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+#Action Required: set the mockcpp dir here
+set(MOCKCPP_DIR ~/lab/share/mockcpp/)
 
-set(LAB_ROOT ~/lab/)
+include_directories(${MOCKCPP_DIR}include)
+#include_directories(${LAB_ROOT}mockcpp/3rdparty)
+link_directories(${MOCKCPP_DIR}build/src/)
 
-set(MSGTEST_INCLUDE ${LAB_ROOT}msgtest/include)
-include_directories(${MSGTEST_INCLUDE})
 
+include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/3rdparty)
 
-include_directories(${LAB_ROOT}repo/mockcpp/include)
-#include_directories(${LAB_ROOT}repo/mockcpp/3rdparty)
-link_directories(${LAB_ROOT}repo/mockcpp/build/src/)
 
 enable_testing()
 find_package(GTest REQUIRED)
